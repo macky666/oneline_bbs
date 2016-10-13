@@ -31,7 +31,6 @@ $stmt->execute();
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
 
-
   // 変数の初期化
   $posts = array();
   
@@ -47,7 +46,6 @@ $stmt->execute();
     // 取得したデータを配列に格納しておく
     $posts[] = $rec;
   }
-
 
   // ３．データベースを切断する
   $dbh = null;
