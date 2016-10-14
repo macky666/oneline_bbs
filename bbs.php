@@ -1,8 +1,13 @@
 <?php
 // １．データベースに接続する
-$dsn = 'mysql:dbname=oneline_bbs;host=localhost';
-$user = 'root';
-$password='';
+// $dsn = 'mysql:dbname=oneline_bbs;host=localhost';
+// $user = 'root';
+// $password='';
+
+$dsn = 'mysql:dbname=LAA0792895-onelinebbs;host=mysql116.phy.lolipop.lan';
+$user = 'LAA0792895';
+$password = 'burlroad635';
+
 $dbh = new PDO($dsn, $user, $password);
 $dbh->query('SET NAMES utf8');
 
@@ -18,9 +23,22 @@ $stmt->execute();
 
 }
 
- // ２．SQL文を実行する
-  $sql = 'SELECT * FROM `posts` ORDER BY `created` DESC';
+// action = deleteがGET送信で送られてきた時
+if(!empty($_GET) && ($_GET['action'] == 'delete')){
 
+// SQL作成(DELETE)
+$sql = "DELETE FROM `posts` WHERE `id` =".$_GET['id'];
+var_dump($sql);
+$stmt = $dbh->prepare($sql);
+$stmt->execute();
+
+// 二重に実行されないように、最初のURLへリダイレクト
+// header('Loction: bbs.php');
+exit;
+
+}
+
+  $sql = 'SELECT * FROM `posts` ORDER BY `created` DESC';
   // SELET文実行
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
@@ -53,7 +71,7 @@ $stmt->execute();
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>セブ掲示版</title>
+  <title>セレブ掲示版</title>
 
   <!-- CSS -->
   <link rel="stylesheet" href="assets/css/bootstrap.css">
@@ -127,8 +145,9 @@ $stmt->execute();
                       <i class="fa fa-cogs"></i>
                   </div>
                   <div class="timeline-label">
-                      <h2><a href="#"><?php echo $post_each['nickname']?></a> <span>2016-01-20</span></h2>
+                      <h2><a href="#"><?php echo $post_each['nickname']?></a> <span><?php echo $post_each['created']?></span></h2>
                       <p><?php echo $post_each['comment'] ?></p>
+                      <a href="bbs.php?id=<?php echo $post_each['id']; ?>&action=delete"><i class ="fa fa-trash"></i></a>
                   </div>
               </div>
           </article>
